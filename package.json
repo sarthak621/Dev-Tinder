@@ -6,7 +6,8 @@
   "scripts": {
     "start": "node scr/app.js",
     "dev": "nodemon src/app.js",
-    "practice":"nodemon src/practice.js"
+    "practice":"nodemon src/practice.js",
+    "middleware":"nodemon src/practice_middleware.js"
   },
   "keywords": [
     "nodejs"
