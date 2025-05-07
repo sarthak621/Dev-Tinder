@@ -38,3 +38,42 @@
 - create userSchema and userModel
 - create POST /signup API to add data to database
 - push some documents using API calls from postman
+
+
+- difference b/w json and js object
+          	=>JavaScript Object
+            format: code syntax
+            e.g. const user = {
+  name: "Sarthak",
+  age: 21,
+  isAdmin: true,
+  greet: function() {
+    console.log("Hello!");
+  }
+};
+
+
+            =>JSON 
+            format:	String format
+            e.g.{
+  "name": "Sarthak",
+  "age": 21,
+  "isAdmin": true
+}
+
+- add the express.json middleware to your app
+- make your signup API dynamic to receive data from the end user
+- user .findOne with duplicate email ids , which object returned
+- api to get user by email
+- api to get all the users
+- api to findByID
+- create a  delete user APi
+- difference b/w patch and put
+
+     put->replaces the entire resource
+     patch-> replaces the partial resource
+
+- create a update user API
+- read mongoose docx for models
+- what are options in a Model.findOneAndUpdate method , explore more about it
+- update the user with EmailID
