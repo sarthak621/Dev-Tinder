@@ -9,13 +9,21 @@ const connectDb= require("./config/database.js")
 
 // H.W create POST /signup API to add data to database
 const User=require("./models/user.js")
+
+app.use(express.json())      //adding the middleware to parse the json data
+
 app.post("/signup",async(req,res)=>{
-    const userData=new User({
-        firstName:"rohit",
-        lastName:"sharma",
-        email:"rohit@621.com",
-        password:"rohit"
-    })
+    // console.log(req.body)
+    //dynamic
+    const userData=new User(req.body)
+
+
+    // const userData=new User({
+        // firstName:"rohit",
+        // lastName:"sharma",
+        // email:"rohit@621.com",
+        // password:"rohit"
+    // })
 
     try{
         await userData.save()
