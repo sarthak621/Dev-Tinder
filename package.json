@@ -6,8 +6,9 @@
   "scripts": {
     "start": "node scr/app.js",
     "dev": "nodemon src/app.js",
-    "practice":"nodemon src/practice.js",
-    "middleware":"nodemon src/practice_middleware.js"
+    "practice": "nodemon src/practice.js",
+    "middleware": "nodemon src/practice_middleware.js",
+    "mongoose": "nodemon src/practice_Database_mongoose.js"
   },
   "keywords": [
     "nodejs"
@@ -15,6 +16,7 @@
   "author": "Sarthak",
   "license": "ISC",
   "dependencies": {
-    "express": "^5.1.0"
+    "express": "^5.1.0",
+    "mongoose": "^8.14.1"
   }
 }
