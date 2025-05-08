@@ -16,6 +16,7 @@ app.post("/signup",async(req,res)=>{
     // console.log(req.body)
     //dynamic
     const userData=new User(req.body)
+    console.log(userData)
 
     // // // hardcoded values
     // const userData=new User({
@@ -30,7 +31,7 @@ app.post("/signup",async(req,res)=>{
         res.send("user data has been saved successfully")
     }
     catch(err){
-        res.status(500).send("something went wrong")
+        res.status(500).send("something went wrong"+err.message)
     }
 })
 
@@ -108,11 +109,34 @@ app.delete("/user/delete",async(req,res)=>{
 })
 
 // - create a update user API
-app.patch("/user/update",async(req,res)=>{
-    const userId=req.body._id;
+app.patch("/user/update/:userId",async(req,res)=>{
+    // const userId=req.body._id;
+    const userId=req.params.userId
+    console.log(userId)
+
     const data=req.body
+    console.log("Data to update:", data); // Debugging: Check incoming data
+
     try{
-        const user=await User.findByIdAndUpdate({_id:userId},data)
+
+        //  adding api level validation on patch request and signup post api
+        const allowedUpdates=["photoURL","about","skills","gender","age"]
+        const isUpdateAllowed=Object.keys(data).every((k)=>allowedUpdates.includes(k))
+        console.log("Is update allowed?", isUpdateAllowed); // Debugging
+        
+        if(!isUpdateAllowed){
+            throw new Error("udpate not allowed")
+        }
+
+        // if(data?.skills.length>10){
+        //     throw new Error("skills should be less than 10")
+        // }
+
+        if (data?.skills && Array.isArray(data.skills) && data.skills.length > 10) {
+            throw new Error("Skills should be less than or equal to 10");
+        }
+        
+        const user=await User.findByIdAndUpdate(userId,data,{runValidators:true})
         res.send("user updated successfully")
     }
     catch(err){
