@@ -9,14 +9,18 @@ const connectDb= require("./config/database.js")
 
 // H.W create POST /signup API to add data to database
 const User=require("./models/user.js")
+const {validateSignUpData}=require("./utils/validation.js")
+const bcrypt=require("bcrypt")
 
 app.use(express.json())      //adding the middleware to parse the json data
 
 app.post("/signup",async(req,res)=>{
     // console.log(req.body)
-    //dynamic
-    const userData=new User(req.body)
-    console.log(userData)
+   
+
+    // //dynamic
+    // const userData=new User(req.body)
+    // console.log(userData)
 
     // // // hardcoded values
     // const userData=new User({
@@ -26,11 +30,50 @@ app.post("/signup",async(req,res)=>{
         // password:"rohit"
     // })
 
+    //validating the data in signup API and encrypting[hash] the password using bcrypt
     try{
+       validateSignUpData(req);
+       
+       //bcrypt returns a promise
+       const {firstName, lastName , email , password}=req.body;
+       const passwordHash=await bcrypt.hash(password,10)
+       const userData=new User({
+        firstName, lastName , email , password : passwordHash
+
+       })
+
         await userData.save()
         res.send("user data has been saved successfully")
+         
     }
+
+    // try{
+    //     await userData.save()
+    //     res.send("user data has been saved successfully")
+    // }
     catch(err){
+        res.status(500).send("something went wrong"+err.message)
+    }
+})
+
+app.post("/login",async(req,res)=>{
+    try{
+        const {email,password}=req.body;
+
+        const user= await User.findOne({email});
+        if(!user){
+            throw new Error("Invalid credentials")
+        }
+
+        const isMatch=await bcrypt.compare(password,user.password)
+        if(!isMatch){
+            throw new Error("Invalid credentials")
+        }
+
+        res.send("user logged in successfully")
+    }
+
+        catch(err){
         res.status(500).send("something went wrong"+err.message)
     }
 })

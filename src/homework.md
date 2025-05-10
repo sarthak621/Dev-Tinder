@@ -90,3 +90,9 @@ each field in schema
 - DATA SANITIZATION=>add api validations for all field
 - install validator
 - explore validator library functiona and use validator func. for password,email,URL
+
+- validate data in signup api
+- install bcrypt package
+- create passowrdHAsh using bycrpt.hash and sava the user with encryted password
+- create login API
+- compare the password and throw error if email and password is not valid
