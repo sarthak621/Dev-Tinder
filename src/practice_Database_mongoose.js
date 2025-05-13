@@ -12,6 +12,12 @@ const User=require("./models/user.js")
 const {validateSignUpData}=require("./utils/validation.js")
 const bcrypt=require("bcrypt")
 
+const cookieParser=require("cookie-parser")
+const jwt=require("jsonwebtoken")
+const userAuth=require("./middleware/auth.js")
+
+app.use(cookieParser())
+
 app.use(express.json())      //adding the middleware to parse the json data
 
 app.post("/signup",async(req,res)=>{
@@ -65,12 +71,24 @@ app.post("/login",async(req,res)=>{
             throw new Error("Invalid credentials")
         }
 
-        const isMatch=await bcrypt.compare(password,user.password)
-        if(!isMatch){
+        const isMatch=await user.validatePassword(password)
+        if(isMatch){
+            
+            //creating a jwt token and expires the jwt token in  1 day 
+            
+            // const token=await jwt.sign({_id:user._id},"DEV@TINDER$790",{expiresIn:"1D"}) //HIDE DATA AND SECRET KEY
+                //  =>writing the user Schema for this
+                const token=await user.getJWT()
+            //add the token to cookie and send the response
+            res.cookie("token",token,{expires:new Date(Date.now()+ 1*24*60*60*1000)}) //1 day;
+
+            res.send("user logged in successfully")
+            
+        }
+        else{
             throw new Error("Invalid credentials")
         }
 
-        res.send("user logged in successfully")
     }
 
         catch(err){
@@ -78,6 +96,50 @@ app.post("/login",async(req,res)=>{
     }
 })
 
+
+app.get("/profile",userAuth,async(req,res)=>{
+    // const cookies=req.cookies
+    // console.log(cookies)
+
+    // const {token}=cookies
+    
+    
+    // try{
+    //validate the token
+    // const decodedMsg= await jwt.verify(token,"DEV@TINDER$790")
+
+    // const {_id}=decodedMsg;
+    
+    // const user=await User.findById(_id)
+
+//     if(user){
+//         res.send(user)
+//     }
+//     else{
+//         res.status(404).send("user not found")
+//     }
+//   }
+
+  try{
+    const user=req.user
+     if(user){
+        res.send(user)
+    }
+    else{
+        res.status(404).send("user not found")
+    }
+  }
+
+  catch(err){
+        res.status(500).send("something went wrong"+err.message)
+    }
+    
+})
+
+app.post("/sendConnectionRequest",userAuth,async(req,res)=>{
+    const user=req.user
+    res.send(user.firstName + "sent connection request ")
+})
 
 
 // H.W create GET /user API to get all the data from database

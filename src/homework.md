@@ -96,3 +96,15 @@ each field in schema
 - create passowrdHAsh using bycrpt.hash and sava the user with encryted password
 - create login API
 - compare the password and throw error if email and password is not valid
+
+- install cookie parser
+- just send a dummy cookie to user
+- create get /profile API and check if you get the cookie back
+- install jsonwebtoken
+- in login API , after email and passowrd validation , create a JWT token and send it to user in cookie
+- read the cookies inside your profile API and find the logged in user
+- userAuth Middle ware
+- add the userauth middle ware in profile api and a new sendConnectionRequest API
+- set the expiry of JWT token and cookies to 7 days
+- create userSchema method to getJWT()
+- create userSchema method to comparePassword
